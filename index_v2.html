@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Explainer Tool v2</title>
+    
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/utilities.css">
+    <link rel="stylesheet" href="css/components/topbar.css">
+    <link rel="stylesheet" href="css/components/sidebar.css">
+    <link rel="stylesheet" href="css/components/viewport.css">
+    <link rel="stylesheet" href="css/components/timeline.css">
+    <link rel="stylesheet" href="css/components/modals.css">
+    <link rel="stylesheet" href="css/components/panels.css">
+    <link rel="stylesheet" href="css/components/history.css">
+    <link rel="stylesheet" href="css/components/floating-panels.css">
+    <link rel="stylesheet" href="css/components/notifications.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Top Bar -->
+        <div class="top-bar" id="topBar">
+            <button type="button" onclick="openProjectFolder()" title="Open project folder">📁 Open Folder</button>
+            <span id="projectFolderName" class="project-folder-name">Loading...</span>
+            
+            <button type="button" onclick="toggleHistoryPanel()" title="View version history">📜 History</button>
+            <button type="button" onclick="undo()" id="undoBtn" title="Undo (Ctrl+Z)">↶ Undo</button>
+            <button type="button" onclick="reloadProject()" title="Reload from disk (discard UI changes)">🔄 Reload</button>
+            <button type="button" onclick="redo()" id="redoBtn" title="Redo (Ctrl+Y)">↷ Redo</button>
+            <button type="button" onclick="saveProject()" title="Save project (Ctrl+S)">💾 Save</button>
+            <span id="saveIndicator" style="margin-left: 7px; font-size: 8.4px; color: #666;">—</span>
+            
+            <span class="topbar-spacer"></span>
+            
+            <button type="button" onclick="showExportDialog()" title="Export video">📹 Export</button>
+        </div>
+        
+        <!-- Upper Section: Sidebar + Viewport -->
+        <div class="upper-section">
+            <!-- Asset Sidebar -->
+            <div class="asset-sidebar custom-scrollbar" id="assetSidebar">
+                <div class="sidebar-header">
+                    <h3>ASSETS & TEXT</h3>
+                    <div style="font-size: 7px; color: #666;">Media & text objects</div>
+                </div>
+                <div id="assetList"></div>
+            </div>
+            
+            <!-- Floating Action Toolbar -->
+            <div class="floating-action-toolbar" id="floatingToolbar">
+                <button type="button" onclick="addTextObject()" title="Add Text" class="action-toolbar-btn">
+                    📝
+                </button>
+                <button type="button" onclick="addPlaceholderAsset('image')" title="Add Image" class="action-toolbar-btn">
+                    🖼️
+                </button>
+                <button type="button" onclick="addPlaceholderAsset('video')" title="Add Video" class="action-toolbar-btn">
+                    📹
+                </button>
+                <button type="button" onclick="addPlaceholderAsset('mask')" title="Add Mask" class="action-toolbar-btn">
+                    🎭
+                </button>
+            </div>            
+            <!-- Viewport -->
+            <div class="viewport-container">
+                <div class="viewport-header">
+                    <h3>PREVIEW</h3>
+                </div>
+                <div class="viewport" id="viewport">
+                    <!-- Background video layer (behind everything) -->
+                    <video id="backgroundVideo" style="
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        z-index: 0;
+                        display: none;
+                    " muted loop playsinline></video>
+                    
+                    <!-- Main canvas (on top of video) -->
+                    <div class="viewport-canvas" id="viewportCanvas" style="position: relative; z-index: 1;"></div>
+                    
+                    <!-- Fullscreen button (appears on hover bottom-right) -->
+                    <button type="button" class="viewport-fullscreen-btn" id="viewportFullscreenBtn" onclick="toggleViewportFullscreen()" title="Fullscreen (ESC to exit)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Timeline Section -->
+        <div class="timeline-section no-select" id="timelineSection">
+            <div class="timeline-resize-handle" id="timelineResizeHandle"></div>
+            <div class="timeline-header">
+                <h3 style="font-size: 9.8px; color: #aaa;">TIMELINE</h3>
+                <div class="timeline-controls">
+                    <!-- Play Button (centered prominence) -->
+                    <button class="play-btn timeline-control-btn" id="playBtn">▶ Play</button>
+                    
+                    <div class="timeline-control-spacer"></div>
+                    
+                    <!-- FPS Selector -->
+                    <select id="fpsSelector" onchange="setFPS(parseInt(this.value))" class="timeline-control-btn" style="width: auto; padding: 0 6px;">
+                        <option value="24">24fps</option>
+                        <option value="25">25fps</option>
+                        <option value="30" selected>30fps</option>
+                        <option value="60">60fps</option>
+                    </select>
+                    
+                    <!-- Frame Navigation -->
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                        <button onclick="previousFrame()" class="timeline-control-btn" style="padding: 0 8px;">◀</button>
+                        <input type="text" id="frameInput" value="0" pattern="[0-9]*" onchange="goToFrame(parseInt(this.value))" class="timeline-control-btn" style="width: 55px; text-align: center;">
+                        <button onclick="nextFrame()" class="timeline-control-btn" style="padding: 0 8px;">▶</button>
+                        <span style="font-size: 9px; color: var(--text-secondary); line-height: 24px;">/</span>
+                        <span id="totalFrames" style="font-size: 9px; color: var(--text-secondary); line-height: 24px; min-width: 30px;">0</span>
+                    </div>
+                    
+                    <div class="timeline-control-spacer-large"></div>
+                    
+                    <!-- Timecode Display -->
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                        <input type="text" id="timecodeInput" value="00:00:00" onchange="goToTimecode(this.value)" class="timeline-control-btn" style="width: 75px; text-align: center; font-family: monospace;">
+                        <span style="font-size: 9px; color: var(--text-secondary); line-height: 24px;">/</span>
+                        <span id="totalTimecode" style="font-size: 9px; color: var(--text-secondary); font-family: monospace; line-height: 24px; min-width: 60px;">00:00:00</span>
+                    </div>
+                    
+                    <div class="edit-mode-indicator" id="editModeIndicator" style="display: none;">
+                        📝 Editing
+                    </div>
+                </div>
+            </div>
+            <div class="timeline-container cursor-grab" id="timelineContainer">
+                <div class="timeline-ruler no-select" id="timelineRuler"></div>
+                <div class="timeline-tracks no-select" id="timelineTracks"></div>
+                <div class="playhead-container no-pointer-events" id="playheadContainer">
+                    <div class="playhead no-pointer-events" id="playhead">
+                        <div class="playhead-handle all-pointer-events"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Welcome hint removed - auto-restores last project -->
+
+    <!-- Floating Collapsible Panels -->
+    <div class="floating-panels-container">
+        <!-- Animation Panel Wrapper -->
+        <div class="floating-panel-wrapper" id="animationPanelWrapper" style="display: none;">
+            <button type="button" class="panel-toggle-btn" id="animationToggleBtn" onclick="toggleFloatingPanel('animation')">
+                🎬 Animate
+            </button>
+            <div class="floating-panel-content" id="animationPanelContent">
+        <h3>🎬 Animation Editor <span id="animationPanelMultiLabel" style="font-size: 10px; color: var(--accent-warning); font-weight: normal;"></span></h3>
+        
+        <div class="animation-section">
+            <h4>Entry Animation</h4>
+            <div class="animation-control">
+                <label>Type</label>
+                <select id="animInType" onchange="updateElementAnimation('in', 'type', this.value)">
+                    <option value="none">None</option>
+                    <option value="fadeIn">Fade In</option>
+                    <option value="slideIn">Slide In</option>
+                    <option value="scaleIn">Scale In</option>
+                </select>
+            </div>
+            <div class="animation-control" id="animInDirectionControl" style="display: none;">
+                <label>Direction</label>
+                <select id="animInDirection" onchange="updateElementAnimation('in', 'direction', this.value)">
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                    <option value="up">Up</option>
+                    <option value="down">Down</option>
+                </select>
+            </div>
+            <div class="animation-control">
+                <label>Duration (seconds)</label>
+                <input type="number" id="animInDuration" min="0" max="5" step="0.1" value="0.5" 
+                       onchange="updateElementAnimation('in', 'duration', parseFloat(this.value))">
+            </div>
+            <div class="animation-control">
+                <label>Easing</label>
+                <select id="animInEasing" onchange="updateElementAnimation('in', 'easing', this.value)">
+                    <option value="linear">Linear</option>
+                    <option value="easeIn">Ease In</option>
+                    <option value="easeOut">Ease Out</option>
+                    <option value="easeInOut">Ease In/Out</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="animation-section">
+            <h4>Exit Animation</h4>
+            <div class="animation-control">
+                <label>Type</label>
+                <select id="animOutType" onchange="updateElementAnimation('out', 'type', this.value)">
+                    <option value="none">None</option>
+                    <option value="fadeOut">Fade Out</option>
+                    <option value="slideOut">Slide Out</option>
+                    <option value="scaleOut">Scale Out</option>
+                </select>
+            </div>
+            <div class="animation-control" id="animOutDirectionControl" style="display: none;">
+                <label>Direction</label>
+                <select id="animOutDirection" onchange="updateElementAnimation('out', 'direction', this.value)">
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                    <option value="up">Up</option>
+                    <option value="down">Down</option>
+                </select>
+            </div>
+            <div class="animation-control">
+                <label>Duration (seconds)</label>
+                <input type="number" id="animOutDuration" min="0" max="5" step="0.1" value="0.5"
+                       onchange="updateElementAnimation('out', 'duration', parseFloat(this.value))">
+            </div>
+            <div class="animation-control">
+                <label>Easing</label>
+                <select id="animOutEasing" onchange="updateElementAnimation('out', 'easing', this.value)">
+                    <option value="linear">Linear</option>
+                    <option value="easeIn">Ease In</option>
+                    <option value="easeOut">Ease Out</option>
+                    <option value="easeInOut">Ease In/Out</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="animation-section">
+            <h4>Loop Animation (Continuous)</h4>
+            <div class="animation-control">
+                <label>Type</label>
+                <select id="animLoopType" onchange="updateElementAnimation('loop', 'type', this.value)">
+                    <option value="none">None</option>
+                    <option value="continuous_swing">Continuous Swing</option>
+                    <option value="blocky_swing">Blocky Swing</option>
+                    <option value="blocky_jitter">Blocky Jitter</option>
+                </select>
+            </div>
+            <div id="animLoopControls" style="display: none;">
+                <div class="animation-control">
+                    <label>Cycle Duration (seconds)</label>
+                    <input type="number" id="animLoopCycleDuration" min="0.1" max="10" step="0.1" value="2.0"
+                           onchange="updateElementAnimation('loop', 'cycleDuration', parseFloat(this.value))">
+                </div>
+                <div class="animation-control">
+                    <label>Min Angle (degrees)</label>
+                    <input type="number" id="animLoopMinAngle" min="-180" max="180" step="1" value="-5"
+                           onchange="updateElementAnimation('loop', 'minAngle', parseFloat(this.value))">
+                </div>
+                <div class="animation-control">
+                    <label>Max Angle (degrees)</label>
+                    <input type="number" id="animLoopMaxAngle" min="-180" max="180" step="1" value="5"
+                           onchange="updateElementAnimation('loop', 'maxAngle', parseFloat(this.value))">
+                </div>
+                <div class="animation-control" id="animLoopOffsetControl" style="display: none;">
+                    <label>Max Position Offset (pixels)</label>
+                    <input type="number" id="animLoopMaxOffset" min="0" max="50" step="1" value="3"
+                           onchange="updateElementAnimation('loop', 'maxOffset', parseFloat(this.value))">
+                </div>
+            </div>
+            <div style="font-size: 8px; color: #888; margin-top: 7px;">
+                Loop animations run continuously while element is visible (after entrance, before exit)
+            </div>
+        </div>
+        
+        <div class="animation-preview">
+            <div>Preview</div>
+            <div class="animation-preview-box" id="animPreviewBox"></div>
+        </div>
+            </div>
+        </div>
+        
+        <!-- Text Editor Panel Wrapper -->
+        <div class="floating-panel-wrapper" id="textEditorPanelWrapper" style="display: none;">
+            <button type="button" class="panel-toggle-btn" id="textEditorToggleBtn" onclick="toggleFloatingPanel('textEditor')">
+                ✏️ Edit Text
+            </button>
+            <div class="floating-panel-content" id="textEditorPanelContent">
+        <h3>✏️ Edit Text <span id="textEditorPanelMultiLabel" style="font-size: 10px; color: var(--accent-warning); font-weight: normal;"></span></h3>
+        
+        <div class="text-editor-content custom-scrollbar">
+                <textarea id="textContent" rows="4" placeholder="Enter your text..." style="width: 100%; padding: 5.6px; margin-bottom: 10.5px; font-size: 9.8px; border: 0.7px solid var(--border-color); border-radius: 2.8px; background: var(--bg-primary); color: var(--text-primary);"></textarea>
+                <div id="textMultiEditNote" style="display: none; padding: 10px; margin-bottom: 10.5px; background: rgba(243, 156, 18, 0.1); border: 1px solid var(--accent-warning); border-radius: 3px; font-size: 9px; color: var(--accent-warning); text-align: center;">
+                    📝 Multi-Text Formatting Mode<br>
+                    <span style="font-size: 8px; color: #999;">Text content is preserved. Only formatting will be applied to all selected texts.</span>
+                </div>
+                
+                <div class="text-style-grid">
+                    <!-- Font controls -->
+                    <div class="text-style-control">
+                        <label>Font Family</label>
+                        <select id="textFontFamily" style="width: 100%;"></select>
+                    </div>
+                    <div class="text-style-control">
+                        <label>Font Size</label>
+                        <input type="number" id="textFontSize" min="8" max="200" value="64" style="width: 100%;">
+                    </div>
+                    <div class="text-style-control">
+                        <label>Font Weight</label>
+                        <select id="textFontWeight" style="width: 100%;"></select>
+                    </div>
+                    <div class="text-style-control">
+                        <label>Font Style</label>
+                        <select id="textFontStyle" style="width: 100%;"></select>
+                    </div>
+                    
+                    <!-- Color controls -->
+                    <div class="text-style-control">
+                        <label>Text Color</label>
+                        <input type="color" id="textColor" value="#ffffff" style="width: 100%; height: 28px;">
+                    </div>
+                    <div class="text-style-control">
+                        <label>Background Color</label>
+                        <input type="color" id="textBackgroundColor" value="#000000" style="width: 100%; height: 28px;">
+                    </div>
+                    
+                    <!-- Alignment controls -->
+                    <div class="text-style-control">
+                        <label>Text Align</label>
+                        <select id="textAlign" style="width: 100%;"></select>
+                    </div>
+                    <div class="text-style-control">
+                        <label>Text Decoration</label>
+                        <select id="textDecoration" style="width: 100%;"></select>
+                    </div>
+                    
+                    <!-- Spacing controls -->
+                    <div class="text-style-control">
+                        <label>Line Height</label>
+                        <input type="number" id="textLineHeight" min="0.5" max="3" step="0.1" value="1.2" style="width: 100%;">
+                    </div>
+                    <div class="text-style-control">
+                        <label>Letter Spacing</label>
+                        <input type="number" id="textLetterSpacing" min="-5" max="20" value="0" style="width: 100%;">
+                    </div>
+                    
+                    <!-- Box styling -->
+                    <div class="text-style-control">
+                        <label>Padding</label>
+                        <input type="number" id="textPadding" min="0" max="100" value="20" style="width: 100%;">
+                    </div>
+                    <div class="text-style-control">
+                        <label>Border Radius</label>
+                        <input type="number" id="textBorderRadius" min="0" max="100" value="10" style="width: 100%;">
+                    </div>
+                </div>
+                
+                <div class="panel-actions">
+                    <button type="button" class="panel-action-btn" onclick="closeTextEditor()">Cancel</button>
+                    <button type="button" class="panel-action-btn primary" onclick="saveTextChanges()">Save</button>
+                </div>
+        </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyframe Panel -->
+    <div class="keyframe-panel hidden" id="keyframePanel">
+        <h3>⬥ Keyframes</h3>
+        
+        <div class="keyframe-quick-actions">
+            <button type="button" class="keyframe-action-btn position" onclick="insertKeyframe('position')">
+                📍 Position
+            </button>
+            <button type="button" class="keyframe-action-btn size" onclick="insertKeyframe('size')">
+                📏 Size
+            </button>
+            <button type="button" class="keyframe-action-btn rotation" onclick="insertKeyframe('rotation')">
+                🔄 Rotation
+            </button>
+            <button type="button" class="keyframe-action-btn opacity" onclick="insertKeyframe('opacity')">
+                👁️ Opacity
+            </button>
+        </div>
+        
+        <div class="keyframe-info" id="keyframeInfo">
+            Select a timeline block and press a button to insert a keyframe at the current playhead position.
+        </div>
+        
+        <div class="keyframe-hotkeys">
+            <strong>Shortcuts:</strong><br>
+            <kbd>Ctrl+Z</kbd> Undo<br>
+            <kbd>Ctrl+Y</kbd> Redo<br>
+            <kbd>Ctrl+S</kbd> Save<br>
+            <kbd>Space</kbd> Play/Pause<br>
+            <kbd>Right-click keyframe</kbd> Delete
+        </div>
+    </div>
+
+    <!-- History Panel (Version Control) -->
+    <div class="history-panel hidden" id="historyPanel">
+        <button type="button" class="history-panel-close" onclick="toggleHistoryPanel()">×</button>
+        <h3>📜 Version History</h3>
+        
+        <div class="history-stats" id="historyStats">
+            No history
+        </div>
+        
+        <div class="history-list custom-scrollbar" id="historyList">
+            <!-- History items rendered here -->
+        </div>
+        
+        <div class="history-actions">
+            <button type="button" class="history-action-btn" onclick="undo()" id="historyUndoBtn">↶ Undo</button>
+            <button type="button" class="history-action-btn" onclick="redo()" id="historyRedoBtn">↷ Redo</button>
+            <button type="button" class="history-action-btn" onclick="saveProject()" id="historySaveBtn">💾 Save</button>
+        </div>
+    </div>
+
+    <!-- Text Editor Panel -->
+    <div class="text-editor-panel hidden" id="textEditorPanel">
+        <button type="button" class="text-editor-panel-close" onclick="closeTextEditor()">×</button>
+        <h3>✏️ Edit Text</h3>
+        
+        <div class="text-editor-content custom-scrollbar">
+                <textarea id="textContent" rows="4" placeholder="Enter your text..." style="width: 100%; padding: 5.6px; margin-bottom: 10.5px; font-size: 9.8px; border: 0.7px solid var(--border-color); border-radius: 2.8px; background: var(--bg-primary); color: var(--text-primary);"></textarea>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 10.5px;">
+                    <div>
+                        <label>Font:</label>
+                        <select id="textFontFamily" style="width: 100%; padding: 4.2px;">
+                            <option value="'Papernotes', cursive">Papernotes</option>
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="'Helvetica Neue', Helvetica, sans-serif">Helvetica</option>
+                            <option value="'Times New Roman', Times, serif">Times</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="'Courier New', Courier, monospace">Courier</option>
+                            <option value="Impact, sans-serif">Impact</option>
+                            <option value="Verdana, sans-serif">Verdana</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Size:</label>
+                        <input type="number" id="textFontSize" min="8" max="200" value="48" style="width: 100%; padding: 4.2px;">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 10.5px;">
+                    <div>
+                        <label>Weight:</label>
+                        <select id="textFontWeight" style="width: 100%; padding: 4.2px;">
+                            <option value="normal">Normal</option>
+                            <option value="bold">Bold</option>
+                            <option value="300">Light</option>
+                            <option value="600">Semi-Bold</option>
+                            <option value="900">Black</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Style:</label>
+                        <select id="textFontStyle" style="width: 100%; padding: 4.2px;">
+                            <option value="normal">Normal</option>
+                            <option value="italic">Italic</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 10.5px;">
+                    <div>
+                        <label>Color:</label>
+                        <input type="color" id="textColor" value="#000000" style="width: 100%; height: 28px;">
+                    </div>
+                    <div>
+                        <label>Background:</label>
+                        <div style="display: flex; gap: 3.5px; align-items: center;">
+                            <input type="color" id="textBgColor" value="#000000" style="flex: 1; height: 28px;">
+                            <button type="button" id="textBgTransparentBtn" onclick="toggleTextBgTransparent()" 
+                                    title="Toggle transparent background"
+                                    style="width: 28px; height: 28px; padding: 0; background: var(--button-bg); border: 0.7px solid var(--border-color); border-radius: 2.8px; cursor: pointer; font-size: 12.6px;">
+                                🚫
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 10.5px;">
+                    <div>
+                        <label>Align:</label>
+                        <select id="textAlign" style="width: 100%; padding: 4.2px;">
+                            <option value="left">Left</option>
+                            <option value="center">Center</option>
+                            <option value="right">Right</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Line Height:</label>
+                        <input type="number" id="textLineHeight" min="0.5" max="3" step="0.1" value="1.2" style="width: 100%; padding: 4.2px;">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 10.5px;">
+                    <div>
+                        <label>Letter Spacing:</label>
+                        <input type="number" id="textLetterSpacing" min="-5" max="20" step="0.5" value="0" style="width: 100%; padding: 4.2px;">
+                    </div>
+                    <div>
+                        <label>Padding:</label>
+                        <input type="number" id="textPadding" min="0" max="100" value="10" style="width: 100%; padding: 4.2px;">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 10.5px;">
+                    <div>
+                        <label>Decoration:</label>
+                        <select id="textDecoration" style="width: 100%; padding: 4.2px;">
+                            <option value="none">None</option>
+                            <option value="underline">Underline</option>
+                            <option value="line-through">Strike</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Border Radius:</label>
+                        <input type="number" id="textBorderRadius" min="0" max="100" value="0" style="width: 100%; padding: 4.2px;">
+                    </div>
+                </div>
+
+                <label style="display: flex; align-items: center; gap: 5.6px; margin-bottom: 10.5px;">
+                    <input type="checkbox" id="textAutoResize" checked>
+                    <span>Auto-resize to fit content</span>
+                </label>
+
+                <button type="button" onclick="previewTextChanges()" style="width: 100%; padding: 5.6px; margin-bottom: 7px; background: var(--button-bg); border: none; border-radius: 2.8px; cursor: pointer;">👁️ Preview</button>
+                
+                <div style="display: flex; gap: 7px; margin-top: 14px;">
+                    <button type="button" onclick="closeTextEditor()" style="flex: 1; padding: 5.6px; background: var(--button-bg); border: none; border-radius: 2.8px; cursor: pointer; color: var(--text-primary);">Cancel</button>
+                    <button type="button" onclick="saveTextChanges()" style="flex: 1; padding: 5.6px; background: var(--accent-success); border: none; border-radius: 2.8px; cursor: pointer; color: var(--text-primary);">Save</button>
+                </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Modules (ES6 modules) -->
+    <script type="module" src="js/main-v2.js?v=50"></script>
+</body>
+</html>
+

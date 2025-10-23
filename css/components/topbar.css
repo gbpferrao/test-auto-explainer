@@ -1,0 +1,53 @@
+/* ============================================
+   TOP BAR COMPONENT
+   ============================================ */
+
+.top-bar {
+    background: var(--bg-secondary);
+    padding: 4.2px 8.4px;
+    border-bottom: 1.4px solid var(--border-color);
+    display: flex;
+    gap: 5.6px;
+    align-items: center;
+}
+
+.top-bar button {
+    background: var(--button-bg);
+    border: none;
+    color: var(--text-primary);
+    padding: 4.2px 8.4px;
+    border-radius: 2.8px;
+    cursor: pointer;
+    font-size: 8.4px;
+}
+
+.top-bar button:hover {
+    background: var(--button-hover);
+}
+
+.top-bar input[type="file"] {
+    display: none;
+}
+
+.project-folder-name {
+    color: #888;
+    font-size: 8.4px;
+    font-weight: normal;
+    padding: 0 7px;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.topbar-spacer {
+    flex: 1;
+    min-width: 14px;
+}
+
+.project-name {
+    color: var(--accent-success);
+    font-weight: bold;
+    margin-left: auto;
+}
+

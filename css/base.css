@@ -1,0 +1,106 @@
+/* ============================================
+   CUSTOM FONTS
+   ============================================ */
+
+@font-face {
+    font-family: 'Papernotes';
+    src: url('file:///C:/Users/gbpfe/AppData/Local/Microsoft/Windows/Fonts/Papernotes.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* ============================================
+   BASE STYLES - Reset, Variables, Layout
+   ============================================ */
+
+/* Notification animations */
+@keyframes slideInRight {
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Color Palette */
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #252525;
+    --bg-tertiary: #2a2a2a;
+    --bg-dark: #1f1f1f;
+    --bg-darker: #222;
+    
+    --border-color: #333;
+    --border-color-light: #444;
+    --border-color-lighter: #555;
+    
+    --text-primary: #fff;
+    --text-secondary: #aaa;
+    --text-tertiary: #888;
+    --text-muted: #666;
+    
+    --accent-success: #4CAF50;
+    --accent-info: #2196F3;
+    --accent-warning: #FFD700;
+    --accent-error: #ff0000;
+    
+    --button-bg: #444;
+    --button-hover: #555;
+    
+    /* Spacing */
+    --spacing-xs: 3.5px;
+    --spacing-sm: 7px;
+    --spacing-md: 10.5px;
+    --spacing-lg: 14px;
+    
+    /* Transitions */
+    --transition-fast: 0.1s;
+    --transition-normal: 0.2s;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* topbar | middle | timeline */
+    height: 100vh;
+    overflow: hidden; /* Prevent any overflow */
+}
+
+.upper-section {
+    display: flex;
+    min-height: 0; /* Important for grid child overflow */
+    min-width: 0; /* Important for grid child overflow */
+    overflow: hidden; /* Prevent overflow from this section */
+    border-bottom: 1.4px solid var(--border-color);
+}
+

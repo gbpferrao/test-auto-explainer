@@ -1,0 +1,800 @@
+{
+  "project": {
+    "name": "scene_01_matching_mechanism",
+    "duration": 10,
+    "fps": 30,
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "aspectRatio": "16:9"
+    },
+    "backgroundColor": "#ffffff"
+  },
+  "assets": [
+    {
+      "id": "bg_loop",
+      "filename": "white_loop.mp4",
+      "type": "video",
+      "isBackground": true,
+      "loop": true,
+      "defaultSize": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "id": "block_node",
+      "filename": "block_cube.png",
+      "type": "image",
+      "maskMode": true,
+      "color": "#3498db",
+      "defaultSize": {
+        "width": 100,
+        "height": 90
+      }
+    },
+    {
+      "id": "arrow_right",
+      "filename": "arrow_right.png",
+      "type": "image",
+      "maskMode": true,
+      "color": "#000000",
+      "defaultSize": {
+        "width": 80,
+        "height": 30
+      }
+    },
+    {
+      "id": "bitcoin_icon",
+      "filename": "bitcoin.png",
+      "type": "image",
+      "defaultSize": {
+        "width": 100,
+        "height": 100
+      },
+      "maskMode": true,
+      "color": "#ff9500"
+    },
+    {
+      "id": "chain_link",
+      "filename": "chain_link.png",
+      "type": "image",
+      "maskMode": true,
+      "color": "#b3b3b3",
+      "defaultSize": {
+        "width": 80,
+        "height": 80
+      }
+    }
+  ],
+  "timeline": [
+    {
+      "type": "text",
+      "assetId": "title",
+      "text": "Blockchain Basics",
+      "layer": 10,
+      "startTime": 0,
+      "endTime": 10,
+      "position": {
+        "x": 640,
+        "y": 80,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 1000,
+        "height": 100
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "style": {
+        "fontFamily": "Papernotes, sans-serif",
+        "fontSize": 72,
+        "fontWeight": "bold",
+        "color": "#1a1a1a",
+        "backgroundColor": "transparent",
+        "textAlign": "center",
+        "letterSpacing": 3
+      },
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.8,
+          "easing": "easeOut"
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 0.5,
+      "endTime": 6.340077035299412,
+      "position": {
+        "x": 274.4966442953021,
+        "y": 375.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 0.6,
+      "endTime": 6.35844868044302,
+      "position": {
+        "x": 374.4966442953021,
+        "y": 375.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 0.7,
+      "endTime": 6.288331620388387,
+      "position": {
+        "x": 474.4966442953021,
+        "y": 375.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 0.8,
+      "endTime": 6.14622240005159,
+      "position": {
+        "x": 574.4966442953024,
+        "y": 375.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 0.9,
+      "endTime": 6.004113179714793,
+      "position": {
+        "x": 674.4966442953026,
+        "y": 375.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 1,
+      "endTime": 5.918847647512715,
+      "position": {
+        "x": 774.4966442953026,
+        "y": 375.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 0.6407088714097984,
+      "endTime": 6.144456504387292,
+      "position": {
+        "x": 874.4966442953026,
+        "y": 375.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 1.2,
+      "endTime": 5.617007663517358,
+      "position": {
+        "x": 974.4966442953026,
+        "y": 375.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 0.5,
+      "endTime": 6.376820325586628,
+      "position": {
+        "x": 274.4966442953021,
+        "y": 475.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 0.6,
+      "endTime": 6.376820325586628,
+      "position": {
+        "x": 374.4966442953021,
+        "y": 475.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 0.7,
+      "endTime": 6.17464424411895,
+      "position": {
+        "x": 474.4966442953021,
+        "y": 475.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 0.8,
+      "endTime": 6.0325350237821525,
+      "position": {
+        "x": 574.4966442953024,
+        "y": 475.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 0.9,
+      "endTime": 5.975691335647434,
+      "position": {
+        "x": 674.4966442953026,
+        "y": 475.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 1,
+      "endTime": 5.748316583108558,
+      "position": {
+        "x": 774.4966442953026,
+        "y": 475.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 1.1,
+      "endTime": 5.588870037890672,
+      "position": {
+        "x": 874.4966442953026,
+        "y": 475.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 1.2,
+      "endTime": 5.645145289144043,
+      "position": {
+        "x": 974.4966442953026,
+        "y": 475.1773729626079,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 70
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.3
+        }
+      }
+    },
+    {
+      "assetId": "arrow_right",
+      "layer": 5,
+      "startTime": 2,
+      "endTime": 5.47515345308053,
+      "position": {
+        "x": 148.77277085330783,
+        "y": 371.1792905081496,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 30
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.4
+        }
+      },
+      "keyframes": {
+        "position": [
+          {
+            "time": 2,
+            "value": {
+              "x": 148.77277085330783,
+              "y": 371.1792905081496
+            }
+          },
+          {
+            "time": 2.8,
+            "value": {
+              "x": 348.77277085330735,
+              "y": 391.1792905081496
+            },
+            "easing": "easeOut"
+          },
+          {
+            "time": 3,
+            "value": {
+              "x": 348.77277085330735,
+              "y": 391.1792905081496
+            }
+          },
+          {
+            "time": 3.8,
+            "value": {
+              "x": 548.7727708533077,
+              "y": 351.1792905081496
+            },
+            "easing": "easeOut"
+          },
+          {
+            "time": 4,
+            "value": {
+              "x": 548.7727708533077,
+              "y": 351.1792905081496
+            }
+          },
+          {
+            "time": 4.8,
+            "value": {
+              "x": 748.7727708533077,
+              "y": 411.1792905081496
+            },
+            "easing": "easeOut"
+          },
+          {
+            "time": 5,
+            "value": {
+              "x": 748.7727708533077,
+              "y": 411.1792905081496
+            }
+          }
+        ]
+      }
+    },
+    {
+      "assetId": "bitcoin_icon",
+      "layer": 6,
+      "startTime": 3,
+      "endTime": 10,
+      "position": {
+        "x": 38.657718120805455,
+        "y": 286.3662511984659,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 569.2477302815128,
+        "height": 563.0273793968282
+      },
+      "rotation": 358.4871507854543,
+      "opacity": 0.2,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.8,
+          "easing": "easeOut"
+        },
+        "loop": {
+          "type": "rotate",
+          "duration": 0.5,
+          "easing": "linear",
+          "startValue": 0,
+          "endValue": 360
+        }
+      },
+      "keyframes": {
+        "opacity": [
+          {
+            "time": 3,
+            "value": 0.2
+          },
+          {
+            "time": 10,
+            "value": 0.2
+          }
+        ],
+        "size": [
+          {
+            "time": 6.473300000000016,
+            "value": {
+              "width": 569.2477302815128,
+              "height": 563.0273793968282
+            },
+            "easing": "linear"
+          }
+        ],
+        "position": [
+          {
+            "time": 3.066666666666667,
+            "value": {
+              "x": 38.657718120805455,
+              "y": 286.3662511984659
+            },
+            "easing": "linear"
+          },
+          {
+            "time": 6.790133333333343,
+            "value": {
+              "x": 38.657718120805455,
+              "y": 286.3662511984659
+            },
+            "easing": "linear"
+          }
+        ],
+        "rotation": [
+          {
+            "time": 3.066666666666667,
+            "value": 1.5763355144871514,
+            "easing": "linear"
+          },
+          {
+            "time": 9.833333333333334,
+            "value": 358.4871507854543,
+            "easing": "linear"
+          }
+        ]
+      }
+    },
+    {
+      "type": "text",
+      "assetId": "TRANSACTION",
+      "text": "TRANSACTION",
+      "layer": 7,
+      "startTime": 3,
+      "endTime": 4,
+      "position": {
+        "x": 660.8628954937684,
+        "y": 230.32598274209067,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 1000,
+        "height": 100
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "style": {
+        "fontFamily": "Papernotes, sans-serif",
+        "fontSize": 72,
+        "fontWeight": "bold",
+        "color": "#1a1a1a",
+        "backgroundColor": "transparent",
+        "textAlign": "center",
+        "letterSpacing": 3
+      },
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.8,
+          "easing": "easeOut"
+        }
+      }
+    },
+    {
+      "type": "text",
+      "assetId": "VALIDATION",
+      "text": "VALIDATION",
+      "layer": 7,
+      "startTime": 6.447394385222456,
+      "endTime": 7.447394385222456,
+      "position": {
+        "x": 640,
+        "y": 220.50814956855243,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 1000,
+        "height": 100
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "style": {
+        "fontFamily": "Papernotes, sans-serif",
+        "fontSize": 72,
+        "fontWeight": "bold",
+        "color": "#1a1a1a",
+        "backgroundColor": "transparent",
+        "textAlign": "center",
+        "letterSpacing": 3
+      },
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.8,
+          "easing": "easeOut"
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 7,
+      "endTime": 10,
+      "position": {
+        "x": 540,
+        "y": 360,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 100,
+        "height": 90
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.5
+        }
+      }
+    },
+    {
+      "assetId": "block_node",
+      "layer": 1,
+      "startTime": 6.983014948467246,
+      "endTime": 9.983014948467243,
+      "position": {
+        "x": 740,
+        "y": 360,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 100,
+        "height": 90
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "fadeIn",
+          "duration": 0.5
+        }
+      }
+    },
+    {
+      "assetId": "chain_link",
+      "layer": 2,
+      "startTime": 7.5,
+      "endTime": 10,
+      "position": {
+        "x": 640,
+        "y": 360,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "size": {
+        "width": 80,
+        "height": 80
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "animation": {
+        "in": {
+          "type": "scaleIn",
+          "duration": 0.5
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,241 @@
+/* ============================================
+   FLOATING COLLAPSIBLE PANELS
+   ============================================ */
+
+/* Container for all floating panels */
+.floating-panels-container {
+    position: fixed;
+    right: 14px;
+    top: 60px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+/* Individual floating panel wrapper */
+.floating-panel-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 280px;
+}
+
+/* Panel toggle button */
+.panel-toggle-btn {
+    background: var(--bg-secondary);
+    border: 1.4px solid var(--border-color);
+    border-radius: 4.2px;
+    padding: 7px 10.5px;
+    cursor: pointer;
+    font-size: 9.8px;
+    color: var(--text-primary);
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    box-shadow: 0 2.8px 7px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    text-align: center;
+}
+
+.panel-toggle-btn:hover {
+    background: var(--button-hover);
+    border-color: var(--accent-info);
+}
+
+.panel-toggle-btn.active {
+    background: var(--bg-primary);
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* Panel content */
+.floating-panel-content {
+    background: var(--bg-primary);
+    border: 1.4px solid var(--border-color);
+    border-top: none;
+    border-radius: 4.2px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    box-shadow: 0 2.8px 14px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 14px;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+}
+
+.floating-panel-content.expanded {
+    max-height: 80vh;
+    padding: 14px;
+    overflow-y: auto;
+}
+
+/* Panel header */
+.floating-panel-content h3 {
+    margin: 0 0 14px 0;
+    font-size: 11.2px;
+    color: var(--text-primary);
+    border-bottom: 1.4px solid var(--border-color);
+    padding-bottom: 7px;
+}
+
+/* Animation section styling */
+.animation-section {
+    margin-bottom: 14px;
+}
+
+.animation-section h4 {
+    font-size: 9.8px;
+    color: var(--text-secondary);
+    margin: 0 0 7px 0;
+}
+
+.animation-control {
+    margin-bottom: 7px;
+}
+
+.animation-control label {
+    display: block;
+    font-size: 8.4px;
+    color: var(--text-secondary);
+    margin-bottom: 3.5px;
+}
+
+.animation-control select,
+.animation-control input[type="number"] {
+    width: 100%;
+    background: var(--bg-secondary);
+    border: 0.7px solid var(--border-color);
+    border-radius: 2.8px;
+    padding: 4.2px;
+    font-size: 8.4px;
+    color: var(--text-primary);
+}
+
+.animation-control select:focus,
+.animation-control input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent-info);
+}
+
+/* Animation preview */
+.animation-preview {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1.4px solid var(--border-color);
+}
+
+.animation-preview > div:first-child {
+    font-size: 8.4px;
+    color: var(--text-secondary);
+    margin-bottom: 7px;
+}
+
+.animation-preview-box {
+    width: 70px;
+    height: 70px;
+    background: var(--bg-secondary);
+    border: 1.4px solid var(--border-color);
+    border-radius: 2.8px;
+    margin: 0 auto;
+}
+
+/* Text editor specific styles */
+.text-editor-content textarea {
+    width: 100%;
+    min-height: 70px;
+    background: var(--bg-secondary);
+    border: 0.7px solid var(--border-color);
+    border-radius: 2.8px;
+    padding: 7px;
+    font-size: 9.8px;
+    color: var(--text-primary);
+    font-family: inherit;
+    resize: vertical;
+}
+
+.text-editor-content textarea:focus {
+    outline: none;
+    border-color: var(--accent-info);
+}
+
+.text-style-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-top: 7px;
+}
+
+.text-style-control {
+    display: flex;
+    flex-direction: column;
+}
+
+.text-style-control label {
+    font-size: 7.7px;
+    color: var(--text-secondary);
+    margin-bottom: 3.5px;
+}
+
+.text-style-control select,
+.text-style-control input {
+    background: var(--bg-secondary);
+    border: 0.7px solid var(--border-color);
+    border-radius: 2.8px;
+    padding: 3.5px;
+    font-size: 8.4px;
+    color: var(--text-primary);
+}
+
+/* Panel action buttons */
+.panel-actions {
+    display: flex;
+    gap: 7px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1.4px solid var(--border-color);
+}
+
+.panel-action-btn {
+    flex: 1;
+    background: var(--button-bg);
+    border: none;
+    border-radius: 2.8px;
+    padding: 5.6px;
+    font-size: 8.4px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.panel-action-btn:hover {
+    background: var(--button-hover);
+}
+
+.panel-action-btn.primary {
+    background: var(--accent-success);
+}
+
+.panel-action-btn.primary:hover {
+    background: #45a049;
+}
+
+/* Scrollbar for panel content */
+.floating-panel-content::-webkit-scrollbar {
+    width: 7px;
+}
+
+.floating-panel-content::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+.floating-panel-content::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3.5px;
+}
+
+.floating-panel-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+

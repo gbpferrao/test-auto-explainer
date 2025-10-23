@@ -1,0 +1,63 @@
+/* ============================================
+   MODALS
+   ============================================ */
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--bg-tertiary);
+    border-radius: 5.6px;
+    padding: var(--spacing-lg);
+    max-width: 350px;
+    width: 90%;
+}
+
+.modal-content h2 {
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+}
+
+.modal-content p {
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-secondary);
+    font-size: 9.8px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 7px;
+    justify-content: flex-end;
+}
+
+.modal-btn {
+    background: var(--button-bg);
+    border: none;
+    color: var(--text-primary);
+    padding: 5.6px 11.2px;
+    border-radius: 2.8px;
+    cursor: pointer;
+}
+
+.modal-btn.primary {
+    background: var(--accent-success);
+}
+
+.modal-btn:hover {
+    opacity: 0.9;
+}
+

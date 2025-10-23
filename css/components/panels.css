@@ -1,0 +1,251 @@
+/* ============================================
+   PANELS - Text Editor, Animation & Keyframe
+   ============================================ */
+
+/* Text Editor Panel */
+.text-editor-panel {
+    position: fixed;
+    right: 14px;
+    top: 56px;
+    width: 280px;
+    max-height: calc(100vh - 84px);
+    background: var(--bg-tertiary);
+    border: 1.4px solid var(--border-color-light);
+    border-radius: 5.6px;
+    padding: var(--spacing-md);
+    box-shadow: 0 2.8px 14px rgba(0, 0, 0, 0.5);
+    z-index: 5000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.text-editor-panel.hidden {
+    display: none;
+}
+
+.text-editor-panel h3 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+    font-size: 12.6px;
+    padding-right: 21px;
+}
+
+.text-editor-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5.6px;
+}
+
+.text-editor-panel-close {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    background: var(--button-bg);
+    border: none;
+    color: var(--text-primary);
+    font-size: 16.8px;
+    width: 21px;
+    height: 21px;
+    border-radius: 2.8px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.text-editor-panel-close:hover {
+    background: var(--button-hover);
+}
+
+.text-editor-panel label {
+    display: block;
+    margin-bottom: 2.8px;
+    color: var(--text-secondary);
+    font-size: 8.4px;
+    font-weight: 500;
+}
+
+.text-editor-panel select,
+.text-editor-panel input[type="number"],
+.text-editor-panel input[type="color"],
+.text-editor-panel textarea {
+    background: var(--bg-primary);
+    border: 0.7px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 2.8px;
+}
+
+.text-editor-panel select:focus,
+.text-editor-panel input:focus,
+.text-editor-panel textarea:focus {
+    outline: none;
+    border-color: var(--accent-info);
+}
+
+/* Animation Panel */
+.animation-panel {
+    position: fixed;
+    right: 14px;
+    top: 56px;
+    width: 224px;
+    background: var(--bg-tertiary);
+    border: 1.4px solid var(--border-color-light);
+    border-radius: 5.6px;
+    padding: var(--spacing-md);
+    max-height: calc(100vh - 84px);
+    overflow-y: auto;
+    z-index: 5000;
+    box-shadow: 0 2.8px 14px rgba(0, 0, 0, 0.5);
+}
+
+.animation-panel h3 {
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--text-primary);
+    font-size: 9.8px;
+    border-bottom: 0.7px solid var(--border-color-light);
+    padding-bottom: 7px;
+}
+
+.animation-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.animation-section h4 {
+    margin: 0 0 7px 0;
+    color: var(--accent-success);
+    font-size: 8.4px;
+    text-transform: uppercase;
+}
+
+.animation-control {
+    margin-bottom: 8.4px;
+}
+
+.animation-control label {
+    display: block;
+    font-size: 7.7px;
+    color: var(--text-secondary);
+    margin-bottom: 3.5px;
+}
+
+.animation-control select,
+.animation-control input {
+    width: 100%;
+    background: var(--border-color);
+    border: 0.7px solid var(--border-color-lighter);
+    color: var(--text-primary);
+    padding: 4.2px 5.6px;
+    border-radius: 2.8px;
+    font-size: 8.4px;
+}
+
+.animation-control select:focus,
+.animation-control input:focus {
+    outline: none;
+    border-color: var(--accent-success);
+}
+
+.animation-preview {
+    background: var(--bg-primary);
+    border: 0.7px solid var(--border-color-light);
+    border-radius: 2.8px;
+    padding: 7px;
+    margin-top: var(--spacing-md);
+    text-align: center;
+}
+
+.animation-preview-box {
+    width: 35px;
+    height: 35px;
+    background: var(--accent-success);
+    margin: 7px auto;
+    border-radius: 2.8px;
+}
+
+.animation-panel-close {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    background: var(--button-bg);
+    border: none;
+    color: var(--text-primary);
+    width: 16.8px;
+    height: 16.8px;
+    border-radius: 2.8px;
+    cursor: pointer;
+    font-size: 11.2px;
+    line-height: 1;
+}
+
+.animation-panel-close:hover {
+    background: var(--button-hover);
+}
+
+/* Keyframe Panel */
+.keyframe-panel {
+    position: fixed;
+    right: 14px;
+    bottom: 14px;
+    width: 196px;
+    background: var(--bg-tertiary);
+    border: 1.4px solid var(--border-color-light);
+    border-radius: 5.6px;
+    padding: var(--spacing-md);
+    z-index: 5000;
+    box-shadow: 0 2.8px 14px rgba(0, 0, 0, 0.5);
+}
+
+.keyframe-panel h3 {
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--accent-warning);
+    font-size: 9.8px;
+    border-bottom: 0.7px solid var(--border-color-light);
+    padding-bottom: 7px;
+}
+
+.keyframe-quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5.6px;
+    margin-bottom: var(--spacing-md);
+}
+
+.keyframe-action-btn {
+    background: var(--button-bg);
+    border: none;
+    color: var(--text-primary);
+    padding: 5.6px 8.4px;
+    border-radius: 2.8px;
+    cursor: pointer;
+    font-size: 7.7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3.5px;
+}
+
+.keyframe-action-btn:hover {
+    background: var(--button-hover);
+}
+
+.keyframe-action-btn.position { border-left: 2.1px solid var(--accent-info); }
+.keyframe-action-btn.size { border-left: 2.1px solid #FF6B6B; }
+.keyframe-action-btn.rotation { border-left: 2.1px solid #9C27B0; }
+.keyframe-action-btn.opacity { border-left: 2.1px solid #FFD54F; }
+
+.keyframe-info {
+    background: var(--bg-primary);
+    border: 0.7px solid var(--border-color-light);
+    border-radius: 2.8px;
+    padding: 7px;
+    font-size: 7.7px;
+    color: var(--text-secondary);
+}
+
+.keyframe-hotkeys {
+    margin-top: 7px;
+    font-size: 7px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+

@@ -1,0 +1,424 @@
+/* ============================================
+   TIMELINE COMPONENT
+   ============================================ */
+
+/* Hide number input arrows for current frame input */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+    appearance: textfield; /* Standard */
+}
+
+/* Also apply to type="text" inputs that mimic number behavior if needed */
+input[type="text"][pattern="[0-9]*"]::-webkit-outer-spin-button,
+input[type="text"][pattern="[0-9]*"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="text"][pattern="[0-9]*"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.timeline-section {
+    /* Grid child - resizable height */
+    height: 280px; /* Default height */
+    min-height: 150px; /* Minimum usable height */
+    max-height: 600px; /* Maximum height */
+    background: var(--bg-dark);
+    padding: var(--spacing-sm);
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+}
+
+.timeline-resize-handle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    cursor: ns-resize;
+    z-index: 1000;
+    background: transparent;
+    transition: background 0.2s ease;
+}
+
+.timeline-resize-handle:hover {
+    background: rgba(33, 150, 243, 0.3);
+}
+
+.timeline-resize-handle.resizing {
+    background: rgba(33, 150, 243, 0.5);
+}
+
+/* Media queries removed - timeline height is now user-adjustable */
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 7px;
+}
+
+.timeline-controls {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+}
+
+/* Unified height for all timeline controls */
+.timeline-control-btn,
+.timeline-controls button,
+.timeline-controls input,
+.timeline-controls select {
+    height: 24px;
+    padding: 0 8px;
+    font-size: 9px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 3px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.timeline-controls input[type="number"],
+.timeline-controls input[type="text"] {
+    cursor: text;
+}
+
+.timeline-controls button:hover {
+    background: var(--button-hover);
+    border-color: var(--accent-info);
+}
+
+.play-btn {
+    background: var(--button-bg);
+    padding: 0 12px;
+    font-weight: 500;
+}
+
+.play-btn:hover {
+    background: var(--button-hover);
+}
+
+/* Spacing helpers */
+.timeline-control-spacer {
+    width: 1px;
+    height: 18px;
+    background: var(--border-color-light);
+    margin: 0 4px;
+}
+
+.timeline-control-spacer-large {
+    width: 1px;
+    height: 18px;
+    background: var(--border-color-light);
+    margin: 0 12px;
+}
+
+.edit-mode-indicator {
+    font-size: 7.7px;
+    color: var(--accent-success);
+    padding: 3.5px 7px;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 2.8px;
+}
+
+.timeline-container {
+    position: relative;
+    height: calc(100% - 28px);
+    overflow: hidden;
+    cursor: grab;
+}
+
+.timeline-container.grabbing {
+    cursor: grabbing;
+}
+
+.timeline-container.editing {
+    cursor: default;
+}
+
+.timeline-ruler {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 21px;
+    background: var(--bg-tertiary);
+    border-bottom: 0.7px solid var(--border-color-light);
+    pointer-events: none;
+    z-index: 100; /* Above timeline blocks */
+}
+
+.timeline-tracks {
+    position: absolute;
+    top: 21px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1; /* Below ruler */
+}
+
+.timeline-track {
+    height: 42px;
+    border-bottom: 0.7px solid var(--border-color);
+    position: relative;
+}
+
+.track-label {
+    position: absolute;
+    left: 7px;
+    top: 3.5px;
+    font-size: 7.7px;
+    color: var(--text-tertiary);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.timeline-block {
+    position: absolute;
+    height: 28px;
+    top: 7px;
+    border-radius: 2.8px;
+    cursor: move;
+    display: flex;
+    align-items: center;
+    padding: 0 5.6px;
+    font-size: 7.7px;
+    color: var(--text-primary);
+    user-select: none;
+    transition: box-shadow var(--transition-normal);
+}
+
+.timeline-block:hover {
+    box-shadow: 0 0 0 1.4px rgba(255, 255, 255, 0.3);
+}
+
+.timeline-block.selected {
+    box-shadow: 0 0 0 2.1px var(--accent-info);
+}
+
+.timeline-block.multi-selected {
+    box-shadow: 0 0 0 2.1px var(--accent-warning);
+}
+
+.timeline-block.dragging {
+    opacity: 0.7;
+    z-index: 1000;
+}
+
+.timeline-block-resize-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 7px;
+    cursor: ew-resize;
+}
+
+.timeline-block-resize-handle.left {
+    left: 0;
+}
+
+.timeline-block-resize-handle.right {
+    right: 0;
+}
+
+.timeline-block-resize-handle:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Playhead */
+.playhead-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2000;
+}
+
+.playhead {
+    position: absolute;
+    top: 0;
+    width: 1.4px;
+    height: 100%;
+    background: var(--accent-error);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.playhead-handle {
+    position: absolute;
+    top: 0;
+    left: -3.5px;
+    width: 8.4px;
+    height: 14px;
+    background: var(--accent-error);
+    cursor: pointer;
+    pointer-events: all;
+    z-index: 2;
+    clip-path: polygon(50% 100%, 0 0, 100% 0);
+}
+
+/* Ruler Marks */
+.ruler-mark {
+    position: absolute;
+    top: 0;
+    width: 0.7px;
+    height: 100%;
+    background: var(--border-color-light);
+}
+
+.ruler-label {
+    position: absolute;
+    top: 5.6px;
+    font-size: 7px;
+    color: var(--text-tertiary);
+    transform: translateX(-50%);
+}
+
+/* Keyframe Indicators */
+.keyframe-indicator {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: var(--accent-warning);
+    transform: translateX(-3.5px) translateY(-3.5px) rotate(45deg);
+    cursor: grab;
+    z-index: 100;
+    border: 0.7px solid var(--border-color);
+    pointer-events: all;
+    transition: transform var(--transition-fast);
+}
+
+.keyframe-indicator:active {
+    cursor: grabbing;
+}
+
+.keyframe-indicator:hover {
+    transform: translateX(-3.5px) translateY(-3.5px) rotate(45deg) scale(1.4);
+    background: var(--text-primary);
+    box-shadow: 0 0 8.4px rgba(255, 215, 0, 0.9);
+    border-width: 1.4px;
+}
+
+.keyframe-indicator.selected {
+    transform: translateX(-3.5px) translateY(-3.5px) rotate(45deg) scale(1.2);
+    background: var(--accent-success);
+    border: 1.4px solid var(--text-primary);
+    box-shadow: 0 0 7px rgba(76, 175, 80, 0.8);
+}
+
+.keyframe-indicator.selected:hover {
+    transform: translateX(-3.5px) translateY(-3.5px) rotate(45deg) scale(1.5);
+    box-shadow: 0 0 10.5px rgba(76, 175, 80, 1);
+}
+
+.keyframe-indicator.position {
+    background: var(--accent-info);
+}
+
+.keyframe-indicator.size {
+    background: #FF6B6B;
+}
+
+.keyframe-indicator.rotation {
+    background: #9C27B0;
+}
+
+.keyframe-indicator.opacity {
+    background: #FFD54F;
+}
+
+.keyframe-track-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.keyframe-lane {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 42px;
+    pointer-events: none;
+}
+
+.keyframe-lane-separator {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 8.4px;
+    display: flex;
+    align-items: center;
+    gap: 1.4px;
+    padding-left: 105px;
+    pointer-events: all;
+}
+
+.keyframe-lane-label {
+    font-size: 6.3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.35px;
+    font-weight: bold;
+}
+
+.keyframe-property-toggle {
+    width: 9.8px;
+    height: 9.8px;
+    background: var(--button-bg);
+    border: 0.7px solid var(--text-muted);
+    border-radius: 1.4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5.6px;
+    color: var(--text-tertiary);
+}
+
+.keyframe-property-toggle:hover {
+    background: var(--button-hover);
+    border-color: var(--text-tertiary);
+}
+
+.keyframe-property-toggle.active {
+    background: var(--accent-success);
+    border-color: var(--accent-success);
+    color: var(--text-primary);
+}
+
+.keyframe-add-btn {
+    position: absolute;
+    top: 1.4px;
+    right: 3.5px;
+    background: var(--button-bg);
+    border: none;
+    color: var(--accent-warning);
+    width: 14px;
+    height: 14px;
+    border-radius: 2.1px;
+    cursor: pointer;
+    font-size: 9.8px;
+    line-height: 1;
+    z-index: 50;
+}
+
+.keyframe-add-btn:hover {
+    background: var(--button-hover);
+    color: var(--text-primary);
+}
+

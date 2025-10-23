@@ -1,0 +1,58 @@
+/* ============================================
+   UTILITIES - Scrollbars, Helpers
+   ============================================ */
+
+/* Modern Minimalist Scrollbar */
+.custom-scrollbar {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--border-color-lighter) #2f2f2f; /* Firefox thumb and track colors */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 5.6px;
+    height: 5.6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #2f2f2f;
+    border-radius: 7px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--border-color-lighter);
+    border-radius: 7px;
+    border: 1.4px solid #2f2f2f;
+}
+
+/* Prevent unwanted selections/dragging */
+.no-select {
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.no-pointer-events {
+    pointer-events: none;
+}
+
+.all-pointer-events {
+    pointer-events: all;
+}
+
+/* Cursor states */
+.cursor-grab {
+    cursor: grab;
+}
+
+.cursor-grabbing {
+    cursor: grabbing;
+}
+
+.cursor-move {
+    cursor: move;
+}
+
+/* Hidden utility */
+.hidden {
+    display: none !important;
+}
+

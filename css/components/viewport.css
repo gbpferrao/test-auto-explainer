@@ -1,0 +1,297 @@
+/* ============================================
+   VIEWPORT COMPONENT
+   ============================================ */
+
+.viewport-container {
+    flex: 1;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 5.6px;
+    min-height: 0; /* Important for flex child overflow */
+    min-width: 0; /* Important for flex child overflow */
+    padding: 8.4px; /* Consistent padding around everything */
+    background: var(--bg-tertiary);
+    container-type: size; /* Enable container queries for responsive sizing */
+}
+
+.viewport-header {
+    flex-shrink: 0;
+    text-align: center;
+    height: auto; /* Let it size naturally */
+}
+
+.viewport-header h3 {
+    font-size: 8.4px;
+    color: var(--text-secondary);
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+.viewport {
+    /* Account for container padding (8.4px × 2), gap (5.6px), and header (~10.5px) */
+    /* Available width: 100cqw - 16.8px */
+    /* Available height: 100cqh - 32.9px (16.8px padding + 10.5px header + 5.6px gap) */
+    width: min(calc(100cqw - 16.8px), calc((100cqh - 32.9px) * 16 / 9));
+    height: min(calc(100cqh - 32.9px), calc((100cqw - 16.8px) * 9 / 16));
+    aspect-ratio: 16 / 9;
+    margin: auto; /* Center in grid cell */
+    background: #ffffff; /* Default fallback - overridden by JS with JSON backgroundColor or transparent for video */
+    border-radius: 5.6px;
+    position: relative;
+    overflow: visible; /* Allow elements to overflow for flexible positioning */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2.8px 14px rgba(0, 0, 0, 0.5);
+}
+
+.viewport-canvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: transparent; /* Always transparent so viewport background shows through */
+    overflow: visible; /* Allow elements to overflow the canvas */
+}
+
+.viewport-element,
+.viewport-placeholder {
+    position: absolute;
+    transition: none;
+    cursor: move;
+}
+
+.viewport-element img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.viewport-element.selected,
+.viewport-placeholder.selected {
+    outline: 2.1px solid var(--accent-info);
+    outline-offset: 1.4px;
+}
+
+.viewport-element.multi-selected,
+.viewport-placeholder.multi-selected,
+.viewport-text.multi-selected {
+    outline: 2.1px solid var(--accent-warning);
+    outline-offset: 1.4px;
+}
+
+/* Out-of-frame selection boxes (dashed) */
+.viewport-out-of-frame {
+    box-sizing: border-box;
+}
+
+.viewport-out-of-frame.selected-out-of-frame {
+    border: 2.1px dashed var(--accent-info);
+    outline: 1.4px dashed rgba(52, 152, 219, 0.3);
+    outline-offset: 1.4px;
+}
+
+.viewport-out-of-frame.multi-selected-out-of-frame {
+    border: 2.1px dashed var(--accent-warning);
+    outline: 1.4px dashed rgba(243, 156, 18, 0.3);
+    outline-offset: 1.4px;
+}
+
+/* Ensure text elements don't clip the selection outline */
+.viewport-element.viewport-text {
+    overflow: visible !important;
+}
+
+/* Text selection should match asset selection exactly */
+.viewport-element.viewport-text.selected {
+    outline: 2.1px solid var(--accent-info);
+    outline-offset: 1.4px;
+}
+
+.viewport-element.dragging,
+.viewport-placeholder.dragging {
+    opacity: 0.8;
+    z-index: 9999;
+}
+
+.viewport-placeholder {
+    border: 2.1px solid;
+    display: flex;
+    align-items: flex-start;
+    padding: 5.6px;
+}
+
+.placeholder-label {
+    font-size: 8.4px;
+    font-weight: bold;
+    background: rgba(0,0,0,0.7);
+    padding: 2.8px 5.6px;
+    border-radius: 2.1px;
+}
+
+/* Element Resize Handles */
+.element-resize-handle {
+    position: absolute;
+    width: 8.4px;
+    height: 8.4px;
+    background: var(--accent-info);
+    border: 1.4px solid var(--text-primary);
+    border-radius: 50%;
+    z-index: 10;
+    pointer-events: all;
+}
+
+.element-resize-handle.nw {
+    top: -4.2px;
+    left: -4.2px;
+    cursor: nw-resize;
+}
+
+.element-resize-handle.ne {
+    top: -4.2px;
+    right: -4.2px;
+    cursor: ne-resize;
+}
+
+.element-resize-handle.sw {
+    bottom: -4.2px;
+    left: -4.2px;
+    cursor: sw-resize;
+}
+
+.element-resize-handle.se {
+    bottom: -4.2px;
+    right: -4.2px;
+    cursor: se-resize;
+}
+
+/* Element Rotate Handle */
+.element-rotate-handle {
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 14px;
+    background: #888888;
+    border: 1.4px solid var(--text-primary);
+    border-radius: 50%;
+    cursor: grab;
+    z-index: 10;
+    pointer-events: all;
+}
+
+.element-rotate-handle:active {
+    cursor: grabbing;
+}
+
+.element-rotate-handle::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1.4px;
+    height: 14px;
+    background: #888888;
+}
+
+/* Element Info Display */
+.element-info {
+    position: absolute;
+    top: -17.5px;
+    left: 0;
+    background: rgba(33, 150, 243, 0.9);
+    color: var(--text-primary);
+    padding: 2.8px 5.6px;
+    border-radius: 2.1px;
+    font-size: 7px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 11;
+}
+
+/* Fullscreen Button */
+.viewport-fullscreen-btn {
+    position: absolute;
+    bottom: 7px;
+    right: 7px;
+    width: 28px;
+    height: 28px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 0.7px solid var(--border-color);
+    border-radius: 5.6px;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease, background 0.2s ease, transform 0.1s ease;
+    z-index: 1000;
+    backdrop-filter: blur(7px);
+    pointer-events: none;
+}
+
+/* Show button when hovering near bottom-right corner */
+.viewport:hover .viewport-fullscreen-btn {
+    pointer-events: all;
+}
+
+.viewport-fullscreen-btn:hover,
+.viewport:hover .viewport-fullscreen-btn:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.8);
+    border-color: var(--accent-info);
+}
+
+/* Hover zone for button visibility */
+.viewport::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 84px;
+    height: 84px;
+    pointer-events: none;
+}
+
+.viewport:hover .viewport-fullscreen-btn,
+.viewport::after:hover ~ .viewport-fullscreen-btn {
+    opacity: 1;
+}
+
+.viewport-fullscreen-btn:active {
+    transform: scale(0.95);
+}
+
+/* Fullscreen Mode */
+.viewport.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    z-index: 10000;
+    /* Background inherited from JS-set viewport background */
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible; /* Maintain overflow behavior in fullscreen */
+}
+
+.viewport.fullscreen .viewport-fullscreen-btn svg {
+    transform: rotate(180deg);
+}
+
+/* Fullscreen canvas fills available space while maintaining aspect ratio */
+.viewport.fullscreen .viewport-canvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: visible; /* Allow elements to overflow in fullscreen */
+}
+
